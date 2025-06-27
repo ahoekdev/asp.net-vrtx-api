@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
+using api.Models;
+
 [ApiController]
 [Route("[controller]")]
 public class UsersController(ILogger<UsersController> logger) : ControllerBase
