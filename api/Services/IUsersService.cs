@@ -2,7 +2,7 @@ using api.Models;
 
 namespace api.Services
 {
-    public interface IUserService
+    public interface IUsersService
     {
         Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task<UserResponseDto> GetUserByIdAsync(int id);

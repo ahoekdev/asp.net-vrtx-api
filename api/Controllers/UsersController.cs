@@ -5,10 +5,10 @@ using api.Models;
 namespace api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class UserController(IUserService userService) : ControllerBase
+    [Route("[controller]")]
+    public class UsersController(IUsersService userService) : ControllerBase
     {
-        private readonly IUserService _userService = userService;
+        private readonly IUsersService _userService = userService;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()

@@ -3,7 +3,7 @@ using api.Repositories;
 
 namespace api.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UsersService(IUserRepository userRepository) : IUsersService
     {
         private readonly IUserRepository _userRepository = userRepository;
 
