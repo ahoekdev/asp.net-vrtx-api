@@ -1,73 +1,69 @@
 using Microsoft.AspNetCore.Mvc;
-
-namespace api.Controllers;
-
-using api.Models;
-using api.Models.DTOs;
 using api.Services;
+using api.Models;
 
-[ApiController]
-[Route("[controller]")]
-public class UsersController(ILogger<UsersController> logger) : ControllerBase
+namespace api.Controllers
 {
-    [HttpGet]
-    public ActionResult<IEnumerable<User>> Get()
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UserController(IUserService userService) : ControllerBase
     {
-        logger.LogInformation("Fetching users");
-        return Ok(UsersService.GetAll());
-    }
+        private readonly IUserService _userService = userService;
 
-    [HttpGet("{id}")]
-    public ActionResult<User> Get(int id)
-    {
-        var user = UsersService.Get(id);
-
-        if (user is null)
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            return NotFound();
+            var users = await _userService.GetAllUsersAsync();
+            return Ok(users);
         }
 
-        return Ok(user);
-    }
-
-    [HttpPost]
-    public ActionResult<User> Post(UserDto user)
-    {
-
-        var newUser = UsersService.Add(user);
-        return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
-    }
-
-    [HttpPut("{id}")]
-    public ActionResult<User> Put(int id, User user)
-    {
-        if (user.Id != id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
         {
-            return BadRequest("User ID mismatch");
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
+                return Ok(user);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
-        var updatedUser = UsersService.Update(id, user);
-
-        if (updatedUser is null)
+        [HttpPost]
+        public async Task<IActionResult> Add(UserRequestDto userDto)
         {
-            return NotFound();
+            await _userService.AddUserAsync(userDto);
+            return CreatedAtAction(nameof(GetById), new { id = userDto.Id }, userDto);
         }
 
-        return Ok(updatedUser);
-    }
-
-    [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
-    {
-        var user = UsersService.Get(id);
-
-        if (user is null)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, UserRequestDto userDto)
         {
-            return NotFound();
+            try
+            {
+                await _userService.UpdateUserAsync(id, userDto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
-        UsersService.Delete(id);
-
-        return NoContent();
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _userService.DeleteUserAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
     }
 }

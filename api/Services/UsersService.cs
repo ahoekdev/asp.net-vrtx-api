@@ -1,58 +1,59 @@
 using api.Models;
-using api.Models.DTOs;
+using api.Repositories;
 
-namespace api.Services;
-
-public static class UsersService
+namespace api.Services
 {
-    static List<User> Users { get; }
-    static int nextId = 3;
-    static UsersService()
+    public class UserService(IUserRepository userRepository) : IUserService
     {
-        Users =
-        [
-            new User { Id = 1, Email = "user1@example.com" },
-            new User { Id = 2, Email = "user2@example.com" }
-        ];
-    }
+        private readonly IUserRepository _userRepository = userRepository;
 
-    public static List<User> GetAll() => Users;
-
-    public static User? Get(int id) => Users.FirstOrDefault(p => p.Id == id);
-
-    public static User Add(UserDto user)
-    {
-        var newUser = new User
+        public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
         {
-            Id = nextId++,
-            Email = user.Email
-        };
+            var users = await _userRepository.GetAllAsync();
 
-        Users.Add(newUser);
+            return users.Select(u => new UserResponseDto
+            {
+                Id = u.Id,
+                Email = u.Email
+            });
 
-        return newUser;
-    }
+        }
 
-    public static User? Update(int id, User user)
-    {
-        var index = Users.FindIndex(p => p.Id == id);
+        public async Task<UserResponseDto> GetUserByIdAsync(int id)
+        {
+            var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
 
-        if (index == -1)
-            return null;
+            return new UserResponseDto
+            {
+                Id = user.Id,
+                Email = user.Email
+            };
+        }
 
+        public async Task AddUserAsync(UserRequestDto userDto)
+        {
+            var user = new Entities.User
+            {
+                Email = userDto.Email
+            };
 
-        Users[index] = user;
-        return user;
-    }
+            await _userRepository.AddAsync(user);
+        }
 
+        public async Task UpdateUserAsync(int id, UserRequestDto userDto)
+        {
+            var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
 
-    public static void Delete(int id)
-    {
-        var user = Get(id);
+            user.Email = userDto.Email;
 
-        if (user is null)
-            return;
+            await _userRepository.UpdateAsync(user);
+        }
 
-        Users.Remove(user);
+        public async Task DeleteUserAsync(int id)
+        {
+            var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
+
+            await _userRepository.DeleteAsync(id);
+        }
     }
 }
