@@ -1,45 +1,58 @@
 using api.Models;
+using api.Models.DTOs;
 
 namespace api.Services;
 
 public static class UsersService
 {
     static List<User> Users { get; }
-    // static int nextId = 3;
+    static int nextId = 3;
     static UsersService()
     {
         Users =
         [
-            new User { Id = 1, Name = "User 1", Email = "user1@example.com" },
-            new User { Id = 2, Name = "User 2", Email = "user2@example.com" }
+            new User { Id = 1, Email = "user1@example.com" },
+            new User { Id = 2, Email = "user2@example.com" }
         ];
     }
 
     public static List<User> GetAll() => Users;
 
-    // public static Pizza? Get(int id) => Pizzas.FirstOrDefault(p => p.Id == id);
+    public static User? Get(int id) => Users.FirstOrDefault(p => p.Id == id);
 
-    // public static void Add(Pizza pizza)
-    // {
-    //     pizza.Id = nextId++;
-    //     Pizzas.Add(pizza);
-    // }
+    public static User Add(UserDto user)
+    {
+        var newUser = new User
+        {
+            Id = nextId++,
+            Email = user.Email
+        };
 
-    // public static void Delete(int id)
-    // {
-    //     var pizza = Get(id);
-    //     if(pizza is null)
-    //         return;
+        Users.Add(newUser);
 
-    //     Pizzas.Remove(pizza);
-    // }
+        return newUser;
+    }
 
-    // public static void Update(Pizza pizza)
-    // {
-    //     var index = Pizzas.FindIndex(p => p.Id == pizza.Id);
-    //     if(index == -1)
-    //         return;
+    public static User? Update(int id, User user)
+    {
+        var index = Users.FindIndex(p => p.Id == id);
 
-    //     Pizzas[index] = pizza;
-    // }
+        if (index == -1)
+            return null;
+
+
+        Users[index] = user;
+        return user;
+    }
+
+
+    public static void Delete(int id)
+    {
+        var user = Get(id);
+
+        if (user is null)
+            return;
+
+        Users.Remove(user);
+    }
 }

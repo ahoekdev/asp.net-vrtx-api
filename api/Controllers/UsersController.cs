@@ -3,24 +3,71 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 using api.Models;
+using api.Models.DTOs;
+using api.Services;
 
 [ApiController]
 [Route("[controller]")]
 public class UsersController(ILogger<UsersController> logger) : ControllerBase
 {
-    private static readonly User[] Users =
-    [
-        new User { Id = 1, Name = "User 1", Email = "user1@example.com" },
-        new User { Id = 2, Name = "User 2", Email = "user2@example.com" },
-        new User { Id = 3, Name = "User 3", Email = "user3@example.com" },
-        new User { Id = 4, Name = "User 4", Email = "user4@example.com" },
-        new User { Id = 5, Name = "User 5", Email = "user5@example.com" }
-    ];
-
-    [HttpGet(Name = "GetUsers")]
-    public IEnumerable<User> Get()
+    [HttpGet]
+    public ActionResult<IEnumerable<User>> Get()
     {
         logger.LogInformation("Fetching users");
-        return Users;
+        return Ok(UsersService.GetAll());
+    }
+
+    [HttpGet("{id}")]
+    public ActionResult<User> Get(int id)
+    {
+        var user = UsersService.Get(id);
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(user);
+    }
+
+    [HttpPost]
+    public ActionResult<User> Post(UserDto user)
+    {
+
+        var newUser = UsersService.Add(user);
+        return CreatedAtAction(nameof(Get), new { id = newUser.Id }, newUser);
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<User> Put(int id, User user)
+    {
+        if (user.Id != id)
+        {
+            return BadRequest("User ID mismatch");
+        }
+
+        var updatedUser = UsersService.Update(id, user);
+
+        if (updatedUser is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(updatedUser);
+    }
+
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        var user = UsersService.Get(id);
+
+        if (user is null)
+        {
+            return NotFound();
+        }
+
+        UsersService.Delete(id);
+
+        return NoContent();
     }
 }
