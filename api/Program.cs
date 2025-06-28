@@ -3,11 +3,17 @@ using api.Data;
 using api.Repositories;
 using api.Services;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers().AddJsonOptions(options =>
+builder.Services.AddControllers(options =>
 {
+    // Converts JSON response to use camelCase naming convention instead of PascalCase
+    options.ModelMetadataDetailsProviders.Add(new SystemTextJsonValidationMetadataProvider());
+}).AddJsonOptions(options =>
+{
+    // Convert enum values (which are usually integers) to strings in JSON responses
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
