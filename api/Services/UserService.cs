@@ -46,6 +46,7 @@ namespace api.Services
             var user = await userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
 
             user.Email = userDto.Email;
+            user.Password = userDto.Password;
 
             await userRepository.UpdateAsync(user);
         }
