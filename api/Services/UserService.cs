@@ -15,7 +15,8 @@ namespace api.Services
             return users.Select(u => new UserResponseDto
             {
                 Id = u.Id,
-                Email = u.Email
+                Email = u.Email,
+                Role = u.Role
             });
 
         }
@@ -27,7 +28,8 @@ namespace api.Services
             return new UserResponseDto
             {
                 Id = user.Id,
-                Email = user.Email
+                Email = user.Email,
+                Role = user.Role
             };
         }
 
