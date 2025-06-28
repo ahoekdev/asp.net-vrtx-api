@@ -33,6 +33,11 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult<UserResponseDto>> Add(UserRequestDto userDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
                 var createdUser = await userService.AddUserAsync(userDto);
