@@ -17,8 +17,7 @@ namespace api.Repositories
 
     public async Task<User> GetByIdAsync(Guid id)
     {
-      var user = await _context.Users.FindAsync(id) ?? throw new KeyNotFoundException($"User with ID {id} not found.");
-      return user;
+      return await _context.Users.FindAsync(id) ?? throw new KeyNotFoundException($"User with ID {id} not found.");
     }
 
     public async Task<User> AddAsync(UserRequestDto dto)
@@ -32,6 +31,7 @@ namespace api.Repositories
 
       await _context.Users.AddAsync(user);
       await _context.SaveChangesAsync();
+
       return user;
     }
 
