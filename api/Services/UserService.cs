@@ -1,3 +1,4 @@
+using api.Entities;
 using api.Models;
 using api.Repositories;
 
@@ -19,7 +20,7 @@ namespace api.Services
 
         }
 
-        public async Task<UserResponseDto> GetUserByIdAsync(int id)
+        public async Task<UserResponseDto> GetUserByIdAsync(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
 
@@ -30,17 +31,17 @@ namespace api.Services
             };
         }
 
-        public async Task AddUserAsync(UserRequestDto userDto)
+        public async Task<UserResponseDto> AddUserAsync(UserRequestDto dto)
         {
-            var user = new Entities.User
+            var newUser = await _userRepository.AddAsync(dto);
+            return new UserResponseDto
             {
-                Email = userDto.Email
+                Id = newUser.Id,
+                Email = newUser.Email
             };
-
-            await _userRepository.AddAsync(user);
         }
 
-        public async Task UpdateUserAsync(int id, UserRequestDto userDto)
+        public async Task UpdateUserAsync(Guid id, UserRequestDto userDto)
         {
             var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
 
@@ -49,7 +50,7 @@ namespace api.Services
             await _userRepository.UpdateAsync(user);
         }
 
-        public async Task DeleteUserAsync(int id)
+        public async Task DeleteUserAsync(Guid id)
         {
             var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
 

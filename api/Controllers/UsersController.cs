@@ -17,7 +17,7 @@ namespace api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<UserResponseDto>> GetById(Guid id)
         {
             try
             {
@@ -31,12 +31,12 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(UserRequestDto userDto)
+        public async Task<ActionResult<UserResponseDto>> Add(UserRequestDto userDto)
         {
             try
             {
-                await userService.AddUserAsync(userDto);
-                return CreatedAtAction(nameof(GetById), new { id = userDto.Id }, userDto);
+                var createdUser = await userService.AddUserAsync(userDto);
+                return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UserRequestDto userDto)
+        public async Task<IActionResult> Update(Guid id, UserRequestDto userDto)
         {
             try
             {
@@ -59,7 +59,7 @@ namespace api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             try
             {

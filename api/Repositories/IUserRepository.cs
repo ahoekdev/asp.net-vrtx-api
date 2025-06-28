@@ -1,13 +1,14 @@
 using api.Entities;
+using api.Models;
 
 namespace api.Repositories
 {
   public interface IUserRepository
   {
     Task<IEnumerable<User>> GetAllAsync();
-    Task<User> GetByIdAsync(int id);
-    Task AddAsync(User user);
+    Task<User> GetByIdAsync(Guid id);
+    Task<User> AddAsync(UserRequestDto user);
     Task UpdateAsync(User user);
-    Task DeleteAsync(int id);
+    Task DeleteAsync(Guid id);
   }
 }

@@ -2,7 +2,7 @@ namespace api.Entities
 {
     public class User
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Email { get; set; } = string.Empty;
     }
 }
