@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Entities;
 using api.Models;
+using api.Enums;
 
 namespace api.Repositories
 {
@@ -24,7 +25,8 @@ namespace api.Repositories
     {
       var user = new User
       {
-        Email = dto.Email
+        Email = dto.Email,
+        Role = UserRole.User
       };
 
       await _context.Users.AddAsync(user);
