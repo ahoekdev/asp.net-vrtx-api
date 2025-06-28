@@ -8,7 +8,6 @@ namespace api.Controllers
     [Route("[controller]")]
     public class UsersController(IUserService userService) : ControllerBase
     {
-
         [HttpGet]
         public async Task<ActionResult> GetAllUsers()
         {
