@@ -17,6 +17,10 @@ namespace api.Migrations
                 nullable: false,
                 oldClrType: typeof(int),
                 oldType: "integer");
+
+            migrationBuilder.Sql("UPDATE \"Users\" SET \"Role\" = 'Admin' WHERE \"Role\" = '0'");
+            migrationBuilder.Sql("UPDATE \"Users\" SET \"Role\" = 'Manager' WHERE \"Role\" = '1'");
+            migrationBuilder.Sql("UPDATE \"Users\" SET \"Role\" = 'User' WHERE \"Role\" = '2'");
         }
 
         /// <inheritdoc />
