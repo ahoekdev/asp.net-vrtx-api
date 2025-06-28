@@ -1,6 +1,15 @@
-@api_HostAddress = http://localhost:5012
+@api_HostAddress = http://localhost:5002
 
-GET {{api_HostAddress}}/weatherforecast/
+GET {{api_HostAddress}}/users
 Accept: application/json
 
 ###
+
+GET {{api_HostAddress}}/users/bb4a2d8c-a255-48ac-8602-59e1f6750366
+Accept: application/json
+
+###
+
+DELETE {{api_HostAddress}}/users/bb4a2d8c-a255-48ac-8602-59e1f6750366
+Accept: application/json
+
