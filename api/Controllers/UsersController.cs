@@ -9,15 +9,15 @@ namespace api.Controllers
     public class UsersController(IUserService userService) : ControllerBase
     {
 
-        [HttpGet(Name = "Get")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet]
+        public async Task<ActionResult> GetAllUsers()
         {
             var users = await userService.GetAllUsersAsync();
             return Ok(users);
         }
 
-        [HttpGet("{id}", Name = "GetUserById")]
-        public async Task<ActionResult<UserResponseDto>> GetById(Guid id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserResponseDto>> GetUserById(Guid id)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost(Name = "AddUser")]
+        [HttpPost]
         public async Task<ActionResult<UserResponseDto>> Add(UserRequestDto userDto)
         {
             if (!ModelState.IsValid)
@@ -41,7 +41,7 @@ namespace api.Controllers
             try
             {
                 var createdUser = await userService.AddUserAsync(userDto);
-                return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
             }
             catch (Exception ex)
             {
@@ -49,7 +49,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{id}", Name = "UpdateUser")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UserRequestDto userDto)
         {
             try
@@ -63,7 +63,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("{id}", Name = "DeleteUser")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try

@@ -15,7 +15,7 @@ namespace api.Data
           .Property(u => u.Role)
           .HasConversion(
               v => v.ToString().ToUpper(),
-              v => (UserRole)Enum.Parse(typeof(UserRole), v, true));
+              v => Enum.Parse<UserRole>(v, true));
     }
   }
 }
