@@ -26,7 +26,8 @@ namespace api.Repositories
       var user = new User
       {
         Email = dto.Email,
-        Role = UserRole.User
+        Role = UserRole.User,
+        Password = dto.Password, // In a real application, ensure to hash the password before saving
       };
 
       await _context.Users.AddAsync(user);
