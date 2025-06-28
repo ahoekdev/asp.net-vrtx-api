@@ -9,14 +9,14 @@ namespace api.Controllers
     public class UsersController(IUserService userService) : ControllerBase
     {
 
-        [HttpGet]
+        [HttpGet(Name = "Get")]
         public async Task<IActionResult> GetAll()
         {
             var users = await userService.GetAllUsersAsync();
             return Ok(users);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetUserById")]
         public async Task<ActionResult<UserResponseDto>> GetById(Guid id)
         {
             try
@@ -30,7 +30,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost(Name = "AddUser")]
         public async Task<ActionResult<UserResponseDto>> Add(UserRequestDto userDto)
         {
             if (!ModelState.IsValid)
@@ -49,7 +49,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}", Name = "UpdateUser")]
         public async Task<IActionResult> Update(Guid id, UserRequestDto userDto)
         {
             try
@@ -63,7 +63,7 @@ namespace api.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}", Name = "DeleteUser")]
         public async Task<IActionResult> Delete(Guid id)
         {
             try
