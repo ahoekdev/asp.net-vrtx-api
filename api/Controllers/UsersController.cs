@@ -6,14 +6,13 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController(IUsersService userService) : ControllerBase
+    public class UsersController(IUserService userService) : ControllerBase
     {
-        private readonly IUsersService _userService = userService;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _userService.GetAllUsersAsync();
+            var users = await userService.GetAllUsersAsync();
             return Ok(users);
         }
 
@@ -22,7 +21,7 @@ namespace api.Controllers
         {
             try
             {
-                var user = await _userService.GetUserByIdAsync(id);
+                var user = await userService.GetUserByIdAsync(id);
                 return Ok(user);
             }
             catch (KeyNotFoundException)
@@ -34,8 +33,15 @@ namespace api.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(UserRequestDto userDto)
         {
-            await _userService.AddUserAsync(userDto);
-            return CreatedAtAction(nameof(GetById), new { id = userDto.Id }, userDto);
+            try
+            {
+                await userService.AddUserAsync(userDto);
+                return CreatedAtAction(nameof(GetById), new { id = userDto.Id }, userDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
@@ -43,7 +49,7 @@ namespace api.Controllers
         {
             try
             {
-                await _userService.UpdateUserAsync(id, userDto);
+                await userService.UpdateUserAsync(id, userDto);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -57,7 +63,7 @@ namespace api.Controllers
         {
             try
             {
-                await _userService.DeleteUserAsync(id);
+                await userService.DeleteUserAsync(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)
