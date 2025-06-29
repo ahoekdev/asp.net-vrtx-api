@@ -17,3 +17,11 @@
 Verify that connection string contains `Host=localhost:<PORT_NUMBER>`
 
 - Port number mapping can be found in `compose.yml`
+
+## Migrations
+
+When running migrations, make sure the connection string is correct. That is,
+when running the app and database in docker, the connection string is different
+from when running the app locally. Moreover, it also differs between connecting
+to a local database (local Postgres instance) and a database running in docker.
+In the latter case, make sure to append the port number to localhost.
