@@ -1,15 +1,15 @@
 # Build stage
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 
 WORKDIR /src
 
-COPY ["api.csproj", "src/api/"]
+COPY ["./api.csproj", "api/"]
 
 # Restore
 RUN dotnet restore "api/api.csproj"
 
 # Build
-COPY ["src/api", "api/"]
+COPY ["./", "api/"]
 
 WORKDIR /src/api
 
@@ -27,7 +27,7 @@ ENV ASPNETCORE_HTTP_PORTS=5001
 
 EXPOSE 5001
 
-WORKDIR /app
+WORKDIR /src/app
 
 COPY --from=publish /app/publish .
 
