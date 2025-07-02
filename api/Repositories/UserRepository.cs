@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using api.Data;
 using api.Entities;
 using api.Models;
-using api.Enums;
 
 namespace api.Repositories
 {
@@ -18,15 +17,8 @@ namespace api.Repositories
       return await context.Users.FindAsync(id) ?? throw new KeyNotFoundException($"User with ID {id} not found.");
     }
 
-    public async Task<User> AddAsync(UserRequestDto dto)
+    public async Task<User> AddAsync(User user)
     {
-      var user = new User
-      {
-        Email = dto.Email,
-        Role = UserRole.User,
-        Password = dto.Password, // In a real application, ensure to hash the password before saving
-      };
-
       await context.Users.AddAsync(user);
       await context.SaveChangesAsync();
 

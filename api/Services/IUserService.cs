@@ -1,3 +1,4 @@
+using api.Entities;
 using api.Models;
 
 namespace api.Services
@@ -6,8 +7,7 @@ namespace api.Services
     {
         Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task<UserResponseDto> GetUserByIdAsync(Guid id);
-        Task<UserResponseDto> AddUserAsync(UserRequestDto userDto);
-        Task UpdateUserAsync(Guid id, UserRequestDto userDto);
+        Task<UserResponseDto> AddUserAsync(User user);
         Task DeleteUserAsync(Guid id);
     }
 

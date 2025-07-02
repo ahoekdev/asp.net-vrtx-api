@@ -31,24 +31,16 @@ namespace api.Services
             };
         }
 
-        public async Task<UserResponseDto> AddUserAsync(UserRequestDto dto)
+        public async Task<UserResponseDto> AddUserAsync(User user)
         {
-            var newUser = await userRepository.AddAsync(dto);
+            var newUser = await userRepository.AddAsync(user);
+
             return new UserResponseDto
             {
                 Id = newUser.Id,
-                Email = newUser.Email
+                Email = newUser.Email,
+                Role = newUser.Role
             };
-        }
-
-        public async Task UpdateUserAsync(Guid id, UserRequestDto userDto)
-        {
-            var user = await userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
-
-            user.Email = userDto.Email;
-            user.Password = userDto.Password;
-
-            await userRepository.UpdateAsync(user);
         }
 
         public async Task DeleteUserAsync(Guid id)

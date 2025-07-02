@@ -4,8 +4,7 @@ namespace api.Models;
 
 public class UserResponseDto
 {
-  public Guid Id { get; set; }
-  public string Email { get; set; } = string.Empty;
-
-  public UserRole Role { get; set; } = UserRole.User;
+  public required Guid Id { get; set; }
+  public required string Email { get; set; } = string.Empty;
+  public required UserRole Role { get; set; } = UserRole.User;
 }

@@ -29,38 +29,6 @@ namespace api.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<ActionResult<UserResponseDto>> Add(UserRequestDto userDto)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                var createdUser = await userService.AddUserAsync(userDto);
-                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, UserRequestDto userDto)
-        {
-            try
-            {
-                await userService.UpdateUserAsync(id, userDto);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
