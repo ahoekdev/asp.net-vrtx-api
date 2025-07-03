@@ -4,43 +4,21 @@ using api.Repositories;
 
 namespace api.Services
 {
-    public class UserService(IUserRepository userRepository) : IUserService
+    public class UserService(UserRepository userRepository)
     {
-        public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            var users = await userRepository.GetAllAsync();
-
-            return users.Select(u => new UserResponseDto
-            {
-                Id = u.Id,
-                Email = u.Email,
-                Role = u.Role
-            });
-
+            return await userRepository.GetAllAsync();
         }
 
-        public async Task<UserResponseDto> GetUserByIdAsync(Guid id)
+        public async Task<User> GetUserByIdAsync(Guid id)
         {
-            var user = await userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
-
-            return new UserResponseDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
-            };
+            return await userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException("User not found");
         }
 
-        public async Task<UserResponseDto> AddUserAsync(User user)
+        public async Task<User> AddUserAsync(User user)
         {
-            var newUser = await userRepository.AddAsync(user);
-
-            return new UserResponseDto
-            {
-                Id = newUser.Id,
-                Email = newUser.Email,
-                Role = newUser.Role
-            };
+            return await userRepository.AddAsync(user);
         }
 
         public async Task DeleteUserAsync(Guid id)

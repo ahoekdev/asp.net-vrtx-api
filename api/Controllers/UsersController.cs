@@ -1,27 +1,26 @@
 using Microsoft.AspNetCore.Mvc;
 using api.Services;
 using api.Models;
+using api.Entities;
 
 namespace api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UsersController(IUserService userService) : ControllerBase
+    public class UsersController(UserService userService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult> GetAllUsers()
         {
-            var users = await userService.GetAllUsersAsync();
-            return Ok(users);
+            return Ok(await userService.GetAllUsersAsync());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserResponseDto>> GetUserById(Guid id)
+        public async Task<ActionResult<User>> GetUserById(Guid id)
         {
             try
             {
-                var user = await userService.GetUserByIdAsync(id);
-                return Ok(user);
+                return Ok(await userService.GetUserByIdAsync(id));
             }
             catch (KeyNotFoundException)
             {

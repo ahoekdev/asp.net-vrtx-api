@@ -5,7 +5,7 @@ using api.Models;
 
 namespace api.Repositories
 {
-  public class UserRepository(ApplicationDbContext context) : IUserRepository
+  public class UserRepository(ApplicationDbContext context)
   {
     public async Task<IEnumerable<User>> GetAllAsync()
     {
