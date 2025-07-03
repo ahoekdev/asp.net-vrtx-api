@@ -7,6 +7,8 @@ namespace api.Services
     {
         Task<IEnumerable<UserResponseDto>> GetAllUsersAsync();
         Task<UserResponseDto> GetUserByIdAsync(Guid id);
+
+        Task<User?> GetUserByEmailAsync(string email);
         Task<UserResponseDto> AddUserAsync(User user);
         Task DeleteUserAsync(Guid id);
     }

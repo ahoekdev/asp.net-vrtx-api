@@ -40,5 +40,11 @@ namespace api.Repositories
         await context.SaveChangesAsync();
       }
     }
+
+    public async Task<User?> GetByEmailAsync(string email)
+    {
+      var user = await context.Users.FirstOrDefaultAsync(user => user.Email == email);
+      return user;
+    }
   }
 }

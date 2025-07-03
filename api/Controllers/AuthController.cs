@@ -26,5 +26,19 @@ namespace api.Controllers
             var createdUser = await usersService.AddUserAsync(user);
             return Ok(createdUser);
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(LoginDto dto)
+        {
+            Console.WriteLine("TEST");
+            var user = await usersService.GetUserByEmailAsync(dto.Email);
+
+            if (user is null)
+            {
+                return BadRequest();
+            }
+
+            return user.Email;
+        }
     }
 }
