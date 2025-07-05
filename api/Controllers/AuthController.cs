@@ -14,5 +14,18 @@ namespace api.Controllers
         {
             return Ok(await authService.Register(registerDto));
         }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> Login(LoginDto dto)
+        {
+            var user = await authService.Login(dto);
+
+            if (user == null)
+            {
+                return BadRequest("Incorrect credentials");
+            }
+
+            return user;
+        }
     }
 }
