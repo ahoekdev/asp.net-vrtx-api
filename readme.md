@@ -25,3 +25,7 @@ when running the app and database in docker, the connection string is different
 from when running the app locally. Moreover, it also differs between connecting
 to a local database (local Postgres instance) and a database running in docker.
 In the latter case, make sure to append the port number to localhost.
+
+## Commands
+
+Create string of 64 bytes: `openssl rand -base64 64`

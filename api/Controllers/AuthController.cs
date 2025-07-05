@@ -16,16 +16,16 @@ namespace api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<User>> Login(LoginDto dto)
+        public async Task<ActionResult<string>> Login(LoginDto dto)
         {
-            var user = await authService.Login(dto);
+            var token = await authService.Login(dto);
 
-            if (user == null)
+            if (token == null)
             {
                 return BadRequest("Incorrect credentials");
             }
 
-            return user;
+            return token;
         }
     }
 }

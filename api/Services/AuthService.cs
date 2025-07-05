@@ -1,17 +1,20 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using api.Entities;
 using api.Enums;
 using api.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 class ApplicationUser
 {
-    public string Email { get; set; } = String.Empty;
+    public string Email { get; set; } = string.Empty;
 }
 
 namespace api.Services
 {
-    public class AuthService(UserService userService)
+    public class AuthService(IConfiguration configuraton, UserService userService)
     {
         private static readonly PasswordHasher<ApplicationUser> passwordHasher = new();
 
@@ -33,7 +36,7 @@ namespace api.Services
             return await userService.AddUserAsync(user);
         }
 
-        public async Task<User?> Login(LoginDto loginDto)
+        public async Task<string?> Login(LoginDto loginDto)
         {
             var user = await userService.GetUserByEmailAsync(loginDto.Email);
 
@@ -53,7 +56,31 @@ namespace api.Services
                 return null;
             }
 
-            return user;
+            return CreateToken(user);
+        }
+
+        private string CreateToken(User user)
+        {
+            var claims = new List<Claim>
+            {
+                new (ClaimTypes.Email, user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(configuraton.GetValue<string>("AppSettings:Token")!)
+            );
+
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512);
+
+            var tokenDescriptor = new JwtSecurityToken(
+                issuer: configuraton.GetValue<string>("AppSettings:Issuer"),
+                audience: configuraton.GetValue<string>("AppSettings:Audience"),
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(1),
+                signingCredentials: credentials
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
         }
 
     }
