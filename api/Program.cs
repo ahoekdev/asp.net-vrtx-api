@@ -10,6 +10,7 @@ DotNetEnv.Env.Load();
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    // Postgres doesn't handle PascalCase columns so wel, so entity names are converted to snake_case
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")).UseSnakeCaseNamingConvention());
 
 builder.Services.AddControllers(options =>
