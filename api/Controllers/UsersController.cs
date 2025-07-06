@@ -3,6 +3,7 @@ using api.Services;
 using api.Models;
 using api.Entities;
 using Microsoft.AspNetCore.Authorization;
+using api.Enums;
 
 namespace api.Controllers
 {
@@ -10,7 +11,7 @@ namespace api.Controllers
     [Route("[controller]")]
     public class UsersController(UserService userService) : ControllerBase
     {
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult> GetAllUsers()
         {
