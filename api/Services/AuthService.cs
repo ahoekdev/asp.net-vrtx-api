@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using api.Entities;
-using api.Enums;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -25,14 +24,12 @@ namespace api.Services
                 Email = dto.Email
             }, dto.Password);
 
-            User user = new()
+            return await userService.AddUserAsync(new()
             {
                 Email = dto.Email,
                 Role = UserRole.User,
                 PasswordHash = PasswordHash
-            };
-
-            return await userService.AddUserAsync(user);
+            });
         }
 
         public async Task<string?> Login(LoginDto loginDto)

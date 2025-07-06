@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using api.Entities;
-using api.Enums;
+using api.Models;
 
 namespace api.Data
 {
@@ -14,8 +14,11 @@ namespace api.Data
       modelBuilder.Entity<User>()
           .Property(u => u.Role)
           .HasConversion(
-              v => v.ToString().ToUpper(),
-              v => Enum.Parse<UserRole>(v, true));
+              // Store uppercase string in database
+              v => v.ToUpper(),
+              // Return string that represents UserRole (PascalCase)
+              v => UserRole.All.FirstOrDefault(r => r.Equals(v, StringComparison.CurrentCultureIgnoreCase))!
+          );
     }
   }
 }
