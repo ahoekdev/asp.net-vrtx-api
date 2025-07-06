@@ -32,7 +32,6 @@ namespace api.Services
                 PasswordHash = PasswordHash
             };
 
-
             return await userService.AddUserAsync(user);
         }
 
@@ -40,18 +39,7 @@ namespace api.Services
         {
             var user = await userService.GetUserByEmailAsync(loginDto.Email);
 
-            if (user is null)
-            {
-                return null;
-            }
-
-
-            var result = passwordHasher.VerifyHashedPassword(new()
-            {
-                Email = loginDto.Email
-            }, user.PasswordHash, loginDto.Password);
-
-            if (result == PasswordVerificationResult.Failed)
+            if (user is null || !IsCorrectPassword(user, loginDto))
             {
                 return null;
             }
@@ -59,10 +47,21 @@ namespace api.Services
             return CreateToken(user);
         }
 
+        private static bool IsCorrectPassword(User user, LoginDto loginDto)
+        {
+            var result = passwordHasher.VerifyHashedPassword(new()
+            {
+                Email = loginDto.Email
+            }, user.PasswordHash, loginDto.Password);
+
+            return result != PasswordVerificationResult.Failed;
+        }
+
         private string CreateToken(User user)
         {
             var claims = new List<Claim>
             {
+                new (ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new (ClaimTypes.Email, user.Email)
             };
 

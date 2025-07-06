@@ -20,7 +20,7 @@ namespace api.Controllers
         {
             var token = await authService.Login(dto);
 
-            if (token == null)
+            if (token is null)
             {
                 return BadRequest("Incorrect credentials");
             }
