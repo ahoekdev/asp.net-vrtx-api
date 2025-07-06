@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using api.Services;
 using api.Models;
 using api.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace api.Controllers
 {
@@ -9,6 +10,7 @@ namespace api.Controllers
     [Route("[controller]")]
     public class UsersController(UserService userService) : ControllerBase
     {
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult> GetAllUsers()
         {
