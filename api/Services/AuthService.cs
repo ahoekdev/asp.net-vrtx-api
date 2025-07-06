@@ -27,7 +27,7 @@ namespace api.Services
             return await userService.AddUserAsync(new()
             {
                 Email = dto.Email,
-                Role = UserRole.User,
+                Role = UserRole.Admin,
                 PasswordHash = PasswordHash
             });
         }
