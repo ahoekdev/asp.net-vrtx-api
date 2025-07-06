@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using api.Entities;
 using api.Models;
@@ -32,7 +33,7 @@ namespace api.Services
             });
         }
 
-        public async Task<string?> Login(LoginDto loginDto)
+        public async Task<TokensDto?> Login(LoginDto loginDto)
         {
             var user = await userService.GetUserByEmailAsync(loginDto.Email);
 
@@ -41,7 +42,24 @@ namespace api.Services
                 return null;
             }
 
-            return CreateToken(user);
+
+            return new()
+            {
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+            };
+
+        }
+
+        private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
+        {
+            var refreshToken = CreateRefreshToken();
+            user.RefreshTokenHash = refreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
+
+            await userService.UpdateUserAsync(user);
+
+            return refreshToken;
         }
 
         private static bool IsCorrectPassword(User user, LoginDto loginDto)
@@ -78,6 +96,14 @@ namespace api.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(tokenDescriptor);
+        }
+
+        private static string CreateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+            return Convert.ToBase64String(randomNumber);
         }
 
     }

@@ -31,5 +31,10 @@ namespace api.Services
         {
             return await userRepository.GetByEmailAsync(email);
         }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            await userRepository.UpdateAsync(user);
+        }
     }
 }
