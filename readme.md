@@ -29,3 +29,16 @@ In the latter case, make sure to append the port number to localhost.
 ## Commands
 
 Create string of 64 bytes: `openssl rand -base64 64`
+
+## User Secrets
+
+User secrets are used to store sensitive values that are otherwise stored in .env files
+
+List secrets: `dotnet user-secrets list`
+
+Set secret: `dotnet user-secrets add "<KEY>" "<VALUE>"`
+
+Remove secret: `dotnet user-secrets remove <KEY>`
+
+Secrets on Windows are stored in:
+C:\Users\<USER_NAME>\AppData\Roaming\Microsoft\UserSecrets\<SECRETS_ID>\secrets.json
