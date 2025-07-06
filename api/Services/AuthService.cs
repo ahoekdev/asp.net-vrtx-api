@@ -43,13 +43,27 @@ namespace api.Services
                 return null;
             }
 
+            return new()
+            {
+                AccessToken = CreateToken(user),
+                RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
+            };
+        }
+
+        public async Task<TokensDto?> RefreshTokensAsync(RefreshTokenRequestDto dto)
+        {
+            var user = await ValidateRefreshTokenAsync(dto.UserId, dto.RefreshToken);
+
+            if (user is null)
+            {
+                return null;
+            }
 
             return new()
             {
                 AccessToken = CreateToken(user),
                 RefreshToken = await GenerateAndSaveRefreshTokenAsync(user)
             };
-
         }
 
         private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
@@ -105,6 +119,18 @@ namespace api.Services
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
+        }
+
+        private async Task<User?> ValidateRefreshTokenAsync(Guid userId, string refreshToken)
+        {
+            var user = await userService.GetUserByIdAsync(userId);
+
+            if (user is null || user.RefreshTokenHash != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            {
+                return null;
+            }
+
+            return user;
         }
 
     }

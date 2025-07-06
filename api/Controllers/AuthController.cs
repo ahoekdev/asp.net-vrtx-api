@@ -27,5 +27,18 @@ namespace api.Controllers
 
             return tokens;
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokensDto>> RefreshToken(RefreshTokenRequestDto dto)
+        {
+            var tokens = await authService.RefreshTokensAsync(dto);
+
+            if (tokens is null)
+            {
+                return Unauthorized("Invalid refresh token");
+            }
+
+            return tokens;
+        }
     }
 }
