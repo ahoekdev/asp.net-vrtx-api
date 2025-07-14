@@ -3,38 +3,33 @@ using api.Repositories;
 
 namespace api.Services
 {
-    public class UserService(UserRepository repository)
-    {
-        private static readonly string notFoundMessage = "User not found";
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+    public class LodgeService(LodgeRepository repository)
+    {
+        private static readonly string notFoundMessage = "Lodge not found";
+
+        public async Task<IEnumerable<Lodge>> GetAllAsync()
         {
             return await repository.GetAllAsync();
         }
 
-        public async Task<User> GetUserByIdAsync(Guid id)
+        public async Task<Lodge> GetByIdAsync(Guid id)
         {
             return await repository.GetByIdAsync(id) ?? throw new KeyNotFoundException(notFoundMessage);
         }
 
-        public async Task<User> AddUserAsync(User entity)
+        public async Task<Lodge> AddAsync(Lodge entity)
         {
             return await repository.AddAsync(entity);
         }
 
-        public async Task DeleteUserAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             var entity = await repository.GetByIdAsync(id) ?? throw new KeyNotFoundException(notFoundMessage);
-
             await repository.DeleteAsync(entity.Id);
         }
 
-        public async Task<User?> GetUserByEmailAsync(string email)
-        {
-            return await repository.GetByEmailAsync(email);
-        }
-
-        public async Task UpdateUserAsync(User entity)
+        public async Task UpdateAsync(Lodge entity)
         {
             await repository.UpdateAsync(entity);
         }

@@ -40,6 +40,10 @@ builder.Services.AddControllers(options =>
 // Register services
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+
+builder.Services.AddScoped<LodgeRepository>();
+builder.Services.AddScoped<LodgeService>();
+
 builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
