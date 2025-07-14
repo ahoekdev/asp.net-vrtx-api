@@ -69,7 +69,7 @@ namespace api.Services
         private async Task<string> GenerateAndSaveRefreshTokenAsync(User user)
         {
             var refreshToken = CreateRefreshToken();
-            user.RefreshTokenHash = refreshToken;
+            user.RefreshToken = refreshToken;
             user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(7);
 
             await userService.UpdateUserAsync(user);
@@ -125,7 +125,7 @@ namespace api.Services
         {
             var user = await userService.GetUserByIdAsync(userId);
 
-            if (user is null || user.RefreshTokenHash != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.UtcNow)
             {
                 return null;
             }
