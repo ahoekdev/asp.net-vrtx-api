@@ -8,6 +8,8 @@ namespace api.Data
   {
     public DbSet<User> Users { get; set; }
 
+    public DbSet<Lodge> Lodges { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
       base.OnModelCreating(modelBuilder);
