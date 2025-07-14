@@ -3,6 +3,7 @@ using api.Services;
 using api.Models;
 using api.Entities;
 using Microsoft.AspNetCore.Authorization;
+using api.Mapping;
 
 namespace api.Controllers
 {
@@ -14,7 +15,7 @@ namespace api.Controllers
         [HttpGet]
         public async Task<ActionResult> GetAllUsers()
         {
-            return Ok(await userService.GetAllUsersAsync());
+            return Ok(UserMapper.ToListDto(await userService.GetAllUsersAsync()));
         }
 
         [Authorize(Roles = UserRole.Admin)]
